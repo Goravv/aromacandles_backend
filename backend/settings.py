@@ -224,7 +224,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY SETTINGS
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev-secret")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost").split(",")
+# ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost").split(",")
+ALLOWED_HOSTS = ["aromacandles-backend.onrender.com", "localhost", "127.0.0.1","192.168.1.7","192.168.1.10","192.168.1.8"]
+
 
 # INSTALLED APPS
 INSTALLED_APPS = [
