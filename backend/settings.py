@@ -281,6 +281,9 @@ DATABASES = {
     )
 }
 
+
+
+
 # PASSWORD VALIDATORS
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -328,6 +331,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # CORS
 CORS_ALLOW_ALL_ORIGINS = True
+DEBUG=True
 
 # SECURITY HEADERS (important for production)
 if not DEBUG:
