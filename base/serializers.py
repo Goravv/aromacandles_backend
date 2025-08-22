@@ -1,9 +1,19 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import CustomUser, Product, Order, OrderItem, ShippingAddress, Review
+from .models import (
+    CustomUser,
+    Product,
+    Order,
+    OrderItem,
+    ShippingAddress,
+    Review,
+    ProductImage,
+    ProductColor,
+)
 
 
+# ---------------- USER ----------------
 class UserSerializer(serializers.ModelSerializer):
     custom_id = serializers.SerializerMethodField(read_only=True)
     isAdmin = serializers.SerializerMethodField(read_only=True)
@@ -31,14 +41,31 @@ class UserSerializerWithToken(UserSerializer):
         return str(token.access_token)
 
 
+# ---------------- REVIEWS ----------------
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
 
 
+# ---------------- PRODUCT IMAGES & COLORS ----------------
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ['id', 'image']
+
+
+class ProductColorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductColor
+        fields = ['id', 'name', 'rgb']
+
+
+# ---------------- PRODUCTS ----------------
 class ProductSerializer(serializers.ModelSerializer):
     reviews = serializers.SerializerMethodField(read_only=True)
+    images = ProductImageSerializer(many=True, read_only=True)   # ✅ related_name="images"
+    colors = ProductColorSerializer(many=True, read_only=True)   # ✅ related_name="colors"
 
     class Meta:
         model = Product
@@ -50,6 +77,7 @@ class ProductSerializer(serializers.ModelSerializer):
         return serializer.data
 
 
+# ---------------- ORDERS ----------------
 class ShippingAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShippingAddress

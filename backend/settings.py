@@ -275,10 +275,17 @@ WSGI_APPLICATION = "backend.wsgi.application"
 
 # DATABASE
 DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL"),
-        conn_max_age=600
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv("MYSQL_DATABASE", "diksha_database"),
+        'USER': os.getenv("MYSQL_USER", "admin"),
+        'PASSWORD': os.getenv("MYSQL_PASSWORD", "Gaurav12318"),
+        'HOST': os.getenv("MYSQL_HOST", "database-2.c1oq8qkgg1y0.ap-south-1.rds.amazonaws.com"),
+        'PORT': os.getenv("MYSQL_PORT", "3306"),
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
+    }
 }
 
 

@@ -49,10 +49,19 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
+
+
+
+
 class Product(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=200, null=True, blank=True)
-    image = models.ImageField(upload_to='product_images/', null=True, blank=True, default='product_images/placeholder.jpg')
+    image = models.ImageField(
+        upload_to='product_images/',
+        null=True,
+        blank=True,
+        default='product_images/placeholder.jpg'
+    )  # main image
     brand = models.CharField(max_length=200, null=True, blank=True)
     category = models.CharField(max_length=200, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
@@ -65,6 +74,25 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
+    image = models.ImageField(upload_to="product_images/")
+
+    def __str__(self):
+        return f"Image for {self.product.name}"
+
+
+class ProductColor(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="colors")
+    name = models.CharField(max_length=50)  
+    rgb = models.CharField(max_length=7)    
+
+    def __str__(self):
+        return f"{self.name} ({self.rgb})"
+
+
 
 class Review(models.Model):
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
