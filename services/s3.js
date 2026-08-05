@@ -8,14 +8,14 @@ const s3 = new AWS.S3({
 });
 
 export async function uploadToS3(fileBuffer, fileName, mimetype) {
-  const key = `products/${Date.now()}-${fileName}`;
+  const randomSuffix = crypto.randomBytes(4).toString('hex');
+  const key = `products/${Date.now()}-${randomSuffix}-${fileName}`;
 
   const params = {
     Bucket: process.env.AWS_S3_BUCKET_NAME,
     Key: key,
     Body: fileBuffer,
     ContentType: mimetype,
-    ACL: 'public-read',
   };
 
   try {
@@ -31,14 +31,14 @@ export async function uploadToS3(fileBuffer, fileName, mimetype) {
 }
 
 export async function uploadBlogToS3(fileBuffer, fileName, mimetype) {
-  const key = `blog/${Date.now()}-${fileName}`;
+  const randomSuffix = crypto.randomBytes(4).toString('hex');
+  const key = `blog/${Date.now()}-${randomSuffix}-${fileName}`;
 
   const params = {
     Bucket: process.env.AWS_S3_BUCKET_NAME,
     Key: key,
     Body: fileBuffer,
     ContentType: mimetype,
-    ACL: 'public-read',
   };
 
   try {

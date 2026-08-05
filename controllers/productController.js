@@ -189,6 +189,17 @@ export const adminCreateValidators = [
   body('category_id').optional().isInt(),
   body('category_slugs').optional().isArray(),
   body('is_customizable').optional().isBoolean(),
+  body('image_paths')
+    .optional()
+    .isArray()
+    .custom((value) => {
+      if (Array.isArray(value)) {
+        if (value.some((url) => typeof url !== 'string' || !url.trim())) {
+          throw new Error('Each image path must be a non-empty string');
+        }
+      }
+      return true;
+    }),
 ];
 
 export async function adminCreate(req, res) {
@@ -246,10 +257,14 @@ export async function adminUpdate(req, res) {
   for (const k of allowed) {
     if (req.body[k] !== undefined) data[k] = req.body[k];
   }
+  if (Array.isArray(req.body.image_paths)) {
+    data.images = req.body.image_paths;
+  }
   if (data.name) {
     data.slug = slugify(data.name, { lower: true, strict: true });
   }
   await product.update(data);
+  await product.reload();
   if (Array.isArray(req.body.category_slugs)) {
     const cats = await Category.findAll({ where: { slug: req.body.category_slugs } });
     await product.setCategories(cats);
