@@ -24,18 +24,33 @@ app.use(
     contentSecurityPolicy: false,
   })
 );
+
+// Support multiple comma-separated origins in CLIENT_ORIGIN
+// e.g. CLIENT_ORIGIN=http://localhost:5173,https://aromacandles-frontend-5lq4.vercel.app
+const allowedOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+    origin: function (origin, callback) {
+      // allow requests with no origin (curl, Postman, server-to-server, mobile apps)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.warn(`CORS blocked request from origin: ${origin}`);
+        callback(new Error(`CORS blocked for origin: ${origin}`));
+      }
+    },
     credentials: true,
   })
 );
+
 app.use(morgan('dev'));
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));
-
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
 app.use('/api', routes);
 
 app.use((err, _req, res, _next) => {
