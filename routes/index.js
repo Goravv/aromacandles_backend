@@ -121,7 +121,7 @@ router.patch('/addresses/:id', addresses.addressValidators, handleValidation, ad
 router.delete('/addresses/:id', addresses.remove);
 
 router.get('/wishlist', wishlist.list);
-router.post('/wishlist/:productId', wishlist.add);
+router.post('/wishlist', wishlist.add);
 router.delete('/wishlist/:id', wishlist.remove);
 router.delete('/wishlist/product/:productId', wishlist.removeByProduct);
 

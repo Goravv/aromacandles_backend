@@ -21,7 +21,11 @@ export async function list(req, res) {
 }
 
 export async function add(req, res) {
-  const product = await Product.findByPk(req.params.productId);
+  const { productId } = req.body;
+  if (!productId) {
+    return res.status(400).json({ message: 'productId is required' });
+  }
+  const product = await Product.findByPk(productId);
   if (!product || !product.is_active) {
     return res.status(404).json({ message: 'Product not found' });
   }
